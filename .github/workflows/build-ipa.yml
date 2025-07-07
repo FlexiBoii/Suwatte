@@ -26,7 +26,7 @@ jobs:
           -project Suwatte.xcodeproj \
           -scheme "Suwatte (iOS)"
 
-    - name: Build app
+    - name: Build archive
       run: |
         xcodebuild clean archive \
           -project Suwatte.xcodeproj \
@@ -35,15 +35,15 @@ jobs:
           -archivePath $PWD/build/Suwatte.xcarchive \
           CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
-    - name: Export IPA
+    - name: Package IPA manually
       run: |
-        xcodebuild -exportArchive \
-          -archivePath $PWD/build/Suwatte.xcarchive \
-          -exportPath $PWD/build/export \
-          -exportOptionsPlist ExportOptions.plist
+        mkdir -p build/ipa/Payload
+        cp -R build/Suwatte.xcarchive/Products/Applications/*.app build/ipa/Payload/
+        cd build/ipa
+        zip -r ../Suwatte.ipa Payload
 
     - name: Upload IPA artifact
       uses: actions/upload-artifact@v4
       with:
         name: Suwatte-IPA
-        path: build/export
+        path: build/Suwatte.ipa
