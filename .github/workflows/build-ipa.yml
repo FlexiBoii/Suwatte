@@ -5,13 +5,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14 # Use macOS Sonoma runners (latest)
+    runs-on: macos-14
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Xcode version
+    - name: Set up Xcode 15.4
       run: sudo xcode-select -s /Applications/Xcode_15.4.app
 
     - name: Delete old Package.resolved
@@ -20,20 +20,17 @@ jobs:
           rm Suwatte.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
         fi
 
-    - name: List available schemes
-      run: |
-        xcodebuild -list -project Suwatte.xcodeproj
-
     - name: Resolve Swift Packages
       run: |
         xcodebuild -resolvePackageDependencies \
-          -project Suwatte.xcodeproj
+          -project Suwatte.xcodeproj \
+          -scheme "Suwatte (iOS)"
 
     - name: Build app
       run: |
         xcodebuild clean archive \
           -project Suwatte.xcodeproj \
-          -scheme Suwatte \
+          -scheme "Suwatte (iOS)" \
           -configuration Release \
           -archivePath $PWD/build/Suwatte.xcarchive \
           CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
