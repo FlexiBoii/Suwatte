@@ -13,12 +13,13 @@ jobs:
 
     - name: Set up Xcode version
       run: sudo xcode-select -s /Applications/Xcode_15.2.app
-      # Adjust if you prefer another Xcode version
+      # Or remove this step to use default Xcode
 
     - name: Resolve Swift Packages
       run: |
         xcodebuild -resolvePackageDependencies \
-          -workspace Suwatte.xcworkspace
+          -workspace Suwatte.xcworkspace \
+          -scheme Suwatte
 
     - name: Build app
       run: |
